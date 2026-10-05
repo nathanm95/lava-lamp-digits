@@ -1,0 +1,38 @@
+{
+  "name": "lava-lamp-digits",
+  "author": "Nathan Marchant",
+  "version": "1.0.0",
+  "keywords": [
+    "pebble-app"
+  ],
+  "private": true,
+  "dependencies": {
+    "@rebble/clay": "^1.1.0"
+  },
+  "pebble": {
+    "displayName": "Lava Lamp Digits",
+    "uuid": "e237aa68-eaad-4bdb-b73a-a74b956b3f9a",
+    "sdkVersion": "3",
+    "enableMultiJS": true,
+    "targetPlatforms": [
+      "emery",
+      "gabbro"
+    ],
+    "watchapp": {
+      "watchface": true
+    },
+    "capabilities": [
+      "configurable"
+    ],
+    "messageKeys": [
+      "LavaColor",
+      "BgColor",
+      "RaiseToShow",
+      "AutoForm",
+      "DriftMode"
+    ],
+    "resources": {
+      "media": []
+    }
+  }
+}
