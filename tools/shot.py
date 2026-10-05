@@ -3,19 +3,26 @@
 
 `pebble screenshot` goes through pypkjs, which wedges permanently the first
 time a button is pressed. The QEMU monitor is a separate path and keeps
-working. Usage: shot.py <platform> <out.png>
+working. Usage: shot.py <platform>[@sdk] <out.png>
 
 Colours are rescaled to true 0..255 (see rescale()).
 """
 import re, socket, subprocess, sys, time, os
 
 def monitor_port(platform):
+    """`platform` is e.g. `gabbro`, or `gabbro@4.17` to pick the emulator of a
+    particular SDK when more than one instance of a platform is running (each
+    SDK keeps its own flash image, so a second SDK gives an isolated watch)."""
+    plat, _, sdk = platform.partition('@')
     ps = subprocess.run(['ps', 'ax', '-o', 'command'], capture_output=True, text=True).stdout
     for line in ps.splitlines():
-        if 'qemu-pebble' in line and platform in line:
-            m = re.search(r'-monitor tcp::(\d+)', line)
-            if m:
-                return int(m.group(1))
+        if 'qemu-pebble' not in line or plat not in line:
+            continue
+        if sdk and f'Pebble SDK/{sdk}/{plat}/' not in line:
+            continue
+        m = re.search(r'-monitor tcp::(\d+)', line)
+        if m:
+            return int(m.group(1))
     raise SystemExit(f'no running qemu-pebble for {platform}')
 
 def rescale(ppm):

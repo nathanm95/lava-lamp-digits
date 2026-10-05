@@ -65,13 +65,17 @@ static void wake(void) {
 static void form_now(void) {
   time_t now = time(NULL);
   struct tm *t = localtime(&now);
-  int h = t->tm_hour;
+  int h = t->tm_hour, m = t->tm_min;
+#ifdef LAVA_SHOW_TIME
+  h = LAVA_SHOW_TIME / 100;
+  m = LAVA_SHOW_TIME % 100;
+#endif
   bool h24 = clock_is_24h_style();
   if (!h24) {
     h %= 12;
     if (h == 0) h = 12;
   }
-  lava_form_time(h, h24 || h >= 10, t->tm_min);
+  lava_form_time(h, h24 || h >= 10, m);
   wake();
 }
 

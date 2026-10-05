@@ -21,6 +21,14 @@ def configure(ctx):
             for env in ctx.all_envs.values():
                 env.append_value('DEFINES', '%s=1' % flag)
 
+    # `LAVA_SHOW_TIME=1008 pebble build` always forms 10:08, for store
+    # screenshots. The emulator follows the host clock and ignores attempts
+    # to set it, so this is the only way to pick the time on screen.
+    show_time = os.environ.get('LAVA_SHOW_TIME')
+    if show_time:
+        for env in ctx.all_envs.values():
+            env.append_value('DEFINES', 'LAVA_SHOW_TIME=%d' % int(show_time))
+
 
 def build(ctx):
     ctx.load('pebble_sdk')

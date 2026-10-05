@@ -4,7 +4,7 @@ A Pebble watchface for **Pebble Time 2 (emery)** and **Pebble Round 2 (gabbro)**
 Blobs of lava drift up and down a lamp, then pour themselves into the time,
 hold for a few seconds, droop and melt apart again.
 
-![Time 2](screenshots/preview_emery.gif) ![Round 2](screenshots/preview_gabbro.gif)
+![Time 2](store/emery_1_preview.gif) ![Round 2](store/gabbro_1_preview.gif)
 
 ## Showing the time
 
@@ -80,7 +80,48 @@ Verification-only build flags (never ship a bundle built with them):
 - `LAVA_DEBUG=1 pebble build` draws fps, render ms, phase, target count and
   input/raise counters on screen.
 - `LAVA_HOLD=1 pebble build` keeps the time formed forever.
+- `LAVA_SHOW_TIME=1008 pebble build` always forms 10:08 (store screenshots).
 
 Emulator screendumps write colour channels on a reduced scale (emery
 0/33/66/100, gabbro 0/60/120/180) under a `255` header, so raw captures look
-dim and muddy. `tools/shot.py` and `tools/gif.py` rescale them to the real colours.
+dim and muddy. `tools/shot.py`, `tools/gif.py` and `tools/record.py` rescale
+them to the real colours. Append `@<sdk>` to the platform (`gabbro@4.33.1`) to
+target one SDK's emulator when another session is running a second instance.
+
+## Store assets
+
+`store/` holds the appstore set, built by `tools/store_assets.py`:
+
+| File | Size | Used for |
+|---|---|---|
+| `emery_1_preview.gif` … `emery_5_drift.png` | 200x228 | Time 2 screenshots |
+| `gabbro_1_preview.gif` … `gabbro_5_drift.png` | 260x260 | Round 2 screenshots |
+| `icon_80x80.png` | 80x80 | `pebble publish` iconSmall |
+| `icon_144x144.png` | 144x144 | `pebble publish` iconLarge |
+| `banner_720x320.png` | 720x320 | Store header image |
+
+Screenshot names start with the platform because `pebble publish` works out
+the platform from the text before the first underscore. The screenshots show
+10:08 and three colour schemes. To regenerate, record each platform and
+palette from a `LAVA_SHOW_TIME=1008` build (temporarily changing the default
+colours in `settings.c` for the red/yellow and blue/navy takes), then:
+
+```bash
+python3 tools/record.py emery /tmp/lava_rec/emery_orange 12 --tap-at 1.0
+python3 tools/record.py emery /tmp/lava_rec/emery_red 6 --tap-at 0.5
+python3 tools/record.py emery /tmp/lava_rec/emery_blue 13 --tap-at 0.5
+# ...same three for gabbro, then:
+python3 tools/store_assets.py /tmp/lava_rec
+```
+
+Frame picks live in `PICKS` at the top of the script. Rebuild without the flag
+before releasing, because `build/` keeps whichever variant was built last.
+
+To publish (not done yet), from a clean release build:
+
+```bash
+pebble publish --non-interactive --no-gif-all-platforms \
+  --description "Lava that pours itself into the time" \
+  --icon-small store/icon_80x80.png --icon-large store/icon_144x144.png \
+  --screenshots store/emery_*.{gif,png} store/gabbro_*.{gif,png}
+```
