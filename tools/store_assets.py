@@ -163,12 +163,12 @@ def make_banner(rec):
     out.paste(gabbro, (gx, gy), round_mask(gabbro))
 
     d = ImageDraw.Draw(out)
-    title = ImageFont.truetype('/System/Library/Fonts/Supplemental/Arial Rounded Bold.ttf', 44)
+    title = ImageFont.truetype('/System/Library/Fonts/Supplemental/Arial Rounded Bold.ttf', 54)
     tag = ImageFont.truetype('/System/Library/Fonts/Supplemental/Arial Rounded Bold.ttf', 18)
-    d.text((30, 96), 'Lava Lamp', font=title, fill=CORE)
-    d.text((30, 144), 'Digits', font=title, fill=LAVA)
-    d.text((32, 206), 'Lava that pours itself', font=tag, fill=(235, 210, 235))
-    d.text((32, 229), 'into the time', font=tag, fill=(235, 210, 235))
+    d.text((29, 78), 'Lava', font=title, fill=CORE)
+    d.text((29, 134), 'Lamp', font=title, fill=LAVA)
+    d.text((32, 212), 'Lava that pours itself', font=tag, fill=(235, 210, 235))
+    d.text((32, 235), 'into the time', font=tag, fill=(235, 210, 235))
     return out.convert('RGB')
 
 

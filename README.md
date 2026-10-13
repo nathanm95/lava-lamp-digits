@@ -1,10 +1,19 @@
-# Lava Lamp Digits
+# Lava Lamp
 
 A Pebble watchface for **Pebble Time 2 (emery)** and **Pebble Round 2 (gabbro)**.
 Blobs of lava drift up and down a lamp, then pour themselves into the time,
 hold for a few seconds, droop and melt apart again.
 
+On the Rebble appstore as
+[Lava Lamp](https://apps.repebble.com/lava-lamp_21794a91d4da4b669c2c3239) (v1.0.0).
+
 ![Time 2](store/emery_1_preview.gif) ![Round 2](store/gabbro_1_preview.gif)
+
+<p>
+  <img src="store/gabbro_3_pour.png" width="160" alt="Lava pouring into the time">
+  <img src="store/emery_4_red.png" width="140" alt="Red lava on yellow liquid">
+  <img src="store/gabbro_5_drift.png" width="160" alt="Blue lava drifting">
+</p>
 
 ## Showing the time
 
@@ -117,11 +126,20 @@ python3 tools/store_assets.py /tmp/lava_rec
 Frame picks live in `PICKS` at the top of the script. Rebuild without the flag
 before releasing, because `build/` keeps whichever variant was built last.
 
-To publish (not done yet), from a clean release build:
+## Releasing
+
+v1.0.0 is live on the store as "Lava Lamp". The repo, the folder and the
+`displayName` in `package.json` still say "Lava Lamp Digits". To ship an
+update, bump `version` in `package.json` past 1.0.0, then publish from a
+clean release build:
 
 ```bash
 pebble publish --non-interactive --no-gif-all-platforms \
-  --description "Lava that pours itself into the time" \
-  --icon-small store/icon_80x80.png --icon-large store/icon_144x144.png \
+  --release-notes "What changed" \
   --screenshots store/emery_*.{gif,png} store/gabbro_*.{gif,png}
 ```
+
+Lava Lamp already exists on the store, so `pebble publish` takes its
+existing-app path. The release goes live immediately, screenshots are added
+rather than replaced (remove old ones on the developer dashboard), and
+`--description` and `--icon-*` are ignored, so change those on the dashboard.
